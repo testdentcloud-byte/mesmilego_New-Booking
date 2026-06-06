@@ -1,0 +1,493 @@
+
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จัดการสมาชิก - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        
+        .table-scroll-container::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        .table-scroll-container::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            /* slate-300 */
+            border-radius: 3px;
+        }
+        
+        .table-scroll-container::-webkit-scrollbar-track {
+            background-color: #f1f5f9;
+            /* slate-100 */
+        }
+        .spinner {
+            width: 3rem;
+            height: 3rem;
+            border: .5rem solid #eee;
+            border-top: .5rem solid #4ade80;
+            /* green-400 */
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+            /* Ensure override */
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100 min-h-screen flex">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white p-5 border-r border-slate-200 flex flex-col fixed inset-y-0 left-0 z-30">
+        <div class="flex items-center space-x-2 mb-8">
+            <div class="bg-green-400 p-2 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+            </div>
+            <h1 class="text-xl font-bold text-slate-800">ME-SMILE</h1>
+        </div>
+        <!-- ===================================================================
+        (B) แสดงชื่อผู้ดูแลที่ล็อกอินมาแล้ว (ดึงจาก localStorage.adminName)
+        =================================================================== -->
+            <div class="bg-slate-50 p-3 rounded-lg mb-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <div>
+                            <p id="adminName" class="text-sm font-semibold text-slate-700 font-thai">Dashboard User</p>
+                            <p class="text-xs text-slate-500 font-thai">ผู้ดูแลระบบ</p>
+                        </div>
+                    </div>
+                    <!-- ปุ่ม Logout -->
+                    <button onclick="logout()" class="text-red-500 hover:text-red-700 text-sm font-thai">
+                        logout
+                    </button>
+                </div>
+            </div>
+
+         <nav class="flex-grow space-y-1">
+                <p class="text-xs text-slate-400 uppercase font-semibold px-3 mb-2">Main Menu</p>
+                <a href="book.html"
+                    class="flex items-center space-x-3 px-3 py-2.5 text-slate-600 hover:bg-indigo-50 hover:text-green-700 rounded-md text-sm font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    <span>จองนัดหมายใหม่</span>
+                </a>
+                <a href="appointment.html"
+                    class="flex items-center space-x-3 px-3 py-2.5 text-slate-600 hover:bg-indigo-50 hover:text-green-700 rounded-md text-sm font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>จัดการนัดหมาย</span>
+                </a>
+                <a href="service.html"
+                    class="flex items-center space-x-3 px-3 py-2.5 text-slate-600 hover:bg-indigo-50 hover:text-green-700 rounded-md text-sm font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    <span>จัดการบริการ</span>
+                </a>
+                <a href="member.html"
+                    class="flex items-center space-x-3 px-3 py-2.5 bg-green-100 text-green-700 rounded-md text-sm font-semibold">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <span>จัดการสมาชิก</span>
+                </a>
+                <a href="doctor.html"
+                    class="flex items-center space-x-3 px-3 py-2.5 text-slate-600 hover:bg-indigo-50 hover:text-green-700 rounded-md text-sm font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>จัดการข้อมูลหมอ</span>
+                </a>
+                <a href="setting.html"
+                    class="flex items-center space-x-3 px-3 py-2.5 text-slate-600 hover:bg-indigo-50 hover:text-green-700 rounded-md text-sm font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>ตั้งค่า</span>
+                </a>
+            </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="ml-64 flex-1 flex flex-col">
+        <!-- Top bar -->
+        <header class="bg-white border-b border-slate-200 p-4 flex items-center justify-between sticky top-0 z-20">
+            <div class="relative w-1/3">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </span>
+                <input type="text" id="memberSearch" placeholder="ค้นหาสมาชิก..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 font-thai">
+            </div>
+                         <div class="flex items-center gap-2">
+                        <label for="branchSelector" class="text-sm font-medium text-slate-700 font-thai">โรงงาน :</label>
+                        <select id="branchSelector" class="p-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 font-thai">
+                            <option value="1">CPF มีนบุรี 1</option>
+                            <option value="2">CPF มีนบุรี 2</option>
+                        </select>
+                    </div>
+
+        </header>
+
+        <!-- Page Content -->
+        <div class="flex-1 p-6 overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold text-slate-800 font-thai">📋 จัดการสมาชิก</h2>
+                <button onclick="showForm()" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md text-sm flex items-center space-x-2 font-thai">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                    <span>เพิ่มสมาชิก</span>
+                </button>
+            </div>
+
+            <div id="formSection" class="hidden bg-white p-6 rounded-lg shadow mb-6">
+                <h3 class="text-lg font-medium text-slate-700 mb-4 font-thai">ฟอร์มสมาชิก</h3>
+                <form id="memberForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label for="form-id" class="block text-sm font-medium text-slate-700 font-thai">รหัส</label>
+                        <input type="text" id="form-id" name="รหัส" readonly class="mt-1 block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500" placeholder="สร้างอัตโนมัติ">
+                    </div>
+                    <div>
+                        <label for="form-userid" class="block text-sm font-medium text-slate-700 font-thai">ไลน์ไอดี</label>
+                        <input type="text" id="form-userid" name="ไลน์ไอดี" placeholder="LINE UserID" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 font-thai">
+                    </div>
+                    <div>
+                        <label for="form-firstname" class="block text-sm font-medium text-slate-700 font-thai">ชื่อ <span class="text-red-500">*</span></label>
+                        <input type="text" id="form-firstname" name="ชื่อ" placeholder="ชื่อ" required class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 font-thai">
+                    </div>
+                    <div>
+                        <label for="form-lastname" class="block text-sm font-medium text-slate-700 font-thai">นามสกุล <span class="text-red-500">*</span></label>
+                        <input type="text" id="form-lastname" name="นามสกุล" placeholder="นามสกุล" required class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 font-thai">
+                    </div>
+                    <div>
+                        <label for="form-phone" class="block text-sm font-medium text-slate-700 font-thai">เบอร์โทร <span class="text-red-500">*</span></label>
+                        <input type="tel" id="form-phone" name="เบอร์โทร" placeholder="08xxxxxxxx" required class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 font-thai">
+                    </div>
+                    <div>
+                        <label for="form-idcard" class="block text-sm font-medium text-slate-700 font-thai">เลขบัตร/ประกัน</label>
+                        <input type="text" id="form-idcard" name="เลขบัตร/ประกัน" placeholder="เลขบัตรประชาชน หรือประกันสังคม" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 font-thai">
+                    </div>
+                    <div>
+                        <label for="form-disease" class="block text-sm font-medium text-slate-700 font-thai">โรค/แพ้</label>
+                        <input type="text" id="form-disease" name="โรค/แพ้" placeholder="โรคประจำตัวหรือแพ้ยา" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 font-thai">
+                    </div>
+                    <div>
+                        <label for="form-note" class="block text-sm font-medium text-slate-700 font-thai">หมายเหตุ</label>
+                        <input type="text" id="form-note" name="หมายเหตุ" placeholder="หมายเหตุเพิ่มเติม" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 font-thai">
+                    </div>
+                    <div class="md:col-span-2 flex justify-end space-x-3">
+                        <button type="button" onclick="hideForm()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium py-2 px-4 rounded-md text-sm font-thai">ยกเลิก</button>
+                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md text-sm flex items-center space-x-2 font-thai">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M7.5
+                            1C6.11929 1 5 2.11929 5 3.5V4H4C3.44772 4 3 4.44772 3 5V17C3 17.5523 3.44772 18 4 18H16C16.5523 18 17 17.5523 17 17V5C17 4.44772 16.5523 4 16 4H15V3.5C15 2.11929 13.8807 1 12.5 1H7.5ZM7 3.5C7 3.22386 7.22386 3 7.5 3H12.5C12.7761 3 13 3.22386 13 3.5V4H7V3.5Z M6 6H14V16H6V6Z" /></svg>
+                            <span>บันทึกข้อมูล</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="bg-white shadow rounded-lg overflow-hidden">
+                <div id="loadingSpinner" class="flex justify-center items-center py-8 hidden">
+                    <div class="spinner"></div>
+                </div>
+                <div id="memberTableContainer" class="overflow-x-auto table-scroll-container"></div>
+            </div>
+        </div>
+    </main>
+    <script src="Config.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        // ตรวจสอบสถานะล็อกอิน
+        const isLoggedIn = localStorage.getItem('isAdminLoggedIn') === 'true';
+        if (!isLoggedIn) {
+        // ถ้าไม่ได้ล็อกอิน ให้เด้งไปหน้า login ทันที
+        window.location.href = 'login.html';
+        return; // หยุดการทำงานที่เหลือบนหน้านี้
+        }
+        
+        // กรณีล็อกอินแล้ว ให้มาดึงชื่อ admin และโหลดข้อมูลสมาชิกตามเดิม
+        const adminName = localStorage.getItem('adminName') || 'Admin';
+        document.getElementById('adminName').textContent = adminName;
+        const branchSelector = document.getElementById('branchSelector');
+        await populateBranchSelector(branchSelector);
+        branchSelector.addEventListener('change', function() {
+            localStorage.setItem('branch', this.value);
+            location.reload();
+        });
+        loadMembers();
+        });
+        
+        // ฟังก์ชัน Logout (เหมือนเดิม)
+        function logout() {
+        localStorage.removeItem('isAdminLoggedIn');
+        localStorage.removeItem('adminName');
+        localStorage.removeItem('adminBranches');
+        localStorage.removeItem('branch');
+        window.location.href = 'login.html';
+        }
+
+        const memberSearchInput = document.getElementById('memberSearch');
+        let allMembersData = []; // Store all members for client-side search
+
+        function showForm(isEdit = false) {
+            document.getElementById('formSection').classList.remove('hidden');
+            if (!isEdit) {
+                document.getElementById('memberForm').reset();
+                document.querySelector('[name="รหัส"]').value = '';
+            }
+            document.getElementById('formSection').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        function hideForm() {
+            document.getElementById('formSection').classList.add('hidden');
+            document.getElementById('memberForm').reset();
+        }
+
+        document.getElementById('memberForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const data = {};
+            // Map ฟิลด์จากฟอร์มให้ตรงกับคอลัมน์ชีต
+            data['รหัส'] = this['รหัส'].value;
+            data['ไลน์ไอดี'] = this['ไลน์ไอดี'].value;
+            data['ชื่อ'] = this['ชื่อ'].value;
+            data['นามสกุล'] = this['นามสกุล'].value;
+            data['เบอร์โทร'] = this['เบอร์โทร'].value;
+            data['เลขบัตร/ประกัน'] = this['เลขบัตร/ประกัน'].value;
+            data['โรค/แพ้'] = this['โรค/แพ้'].value;
+            data['หมายเหตุ'] = this['หมายเหตุ'].value;
+            // เพิ่ม branch
+            data['branch'] = localStorage.getItem('branch') || '1';
+
+            Swal.fire({
+                title: 'กำลังบันทึก...',
+                text: 'กรุณารอสักครู่',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            fetch(CONFIG_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'insertOrUpdateMember',
+                        data
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success || result.id) { // Check for success flag or returned ID
+                        Swal.fire('สำเร็จ!', 'บันทึกข้อมูลสมาชิกเรียบร้อย', 'success');
+                        this.reset();
+                        document.getElementById('formSection').classList.add('hidden');
+                        loadMembers(); // Reload to show updated data
+                    } else {
+                        Swal.fire('ผิดพลาด!', result.message || 'ไม่สามารถบันทึกข้อมูลได้', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error submitting form:', error);
+                    Swal.fire('ผิดพลาด!', 'เกิดข้อผิดพลาดในการเชื่อมต่อ', 'error');
+                });
+        });
+
+        function loadMembers() {
+            const branch = localStorage.getItem('branch') || '1';
+            const spinner = document.getElementById('loadingSpinner');
+            const tableContainer = document.getElementById('memberTableContainer');
+            spinner.classList.remove('hidden');
+            tableContainer.classList.add('hidden');
+            fetch(`${CONFIG_URL}?action=fetchMemberData&branch=${branch}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    allMembersData = data; // Store for searching
+                    renderMemberTable(data);
+                })
+                .catch(error => {
+                    console.error('Error loading members:', error);
+                    tableContainer.innerHTML = `<p class=\"p-4 text-red-500 font-thai\">เกิดข้อผิดพลาดในการโหลดข้อมูลสมาชิก: ${error.message}</p>`;
+                    Swal.fire('ผิดพลาด!', `ไม่สามารถโหลดข้อมูลสมาชิกได้: ${error.message}`, 'error');
+                })
+                .finally(() => {
+                    spinner.classList.add('hidden');
+                    tableContainer.classList.remove('hidden');
+                });
+        }
+
+        function renderMemberTable(dataToRender) {
+            let html = `<table class="min-w-full divide-y divide-slate-200 text-sm">
+            <thead class="bg-slate-50">
+                <tr>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider font-thai">รหัส</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider font-thai hidden">ไลน์ไอดี</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider font-thai">ชื่อ</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider font-thai">นามสกุล</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider font-thai">เบอร์โทร</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider font-thai">เลขบัตร/ประกัน</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider font-thai">โรค/แพ้</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider font-thai">หมายเหตุ</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider font-thai">เวลาบันทึก</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider font-thai">จัดการ</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-slate-200">`;
+
+            if (dataToRender.length === 0) {
+                html += `<tr><td colspan="10" class="px-4 py-4 text-center text-slate-500 font-thai">ไม่พบข้อมูลสมาชิก</td></tr>`;
+            } else {
+                dataToRender.forEach(member => {
+                    html += `<tr class="hover:bg-slate-50">
+                <td class="px-4 py-3 whitespace-nowrap text-slate-700 font-mono text-xs">${member['รหัส'] || '-'}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-slate-600 font-thai hidden">${member['ไลน์ไอดี'] || '-'}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-slate-800 font-medium font-thai">${member['ชื่อ'] || '-'}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-slate-800 font-medium font-thai">${member['นามสกุล'] || '-'}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-slate-600 font-thai">${member['เบอร์โทร'] || '-'}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-slate-600 font-thai">${member['เลขบัตร/ประกัน'] || '-'}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-slate-600 font-thai">${member['โรค/แพ้'] || '-'}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-slate-600 font-thai">${member['หมายเหตุ'] || '-'}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-slate-500 text-xs font-thai">${member['เวลาบันทึก'] ? member['เวลาบันทึก'] : '-'}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                    <button onclick="editMember('${member['รหัส']}')" class="text-green-600 hover:text-green-900 mr-3 font-thai">แก้ไข</button>
+                    <button onclick="deleteMember('${member['รหัส']}')" class="text-red-600 hover:text-red-900 font-thai">ลบ</button>
+                </td>
+            </tr>`;
+                });
+            }
+            html += '</tbody></table>';
+            document.getElementById('memberTableContainer').innerHTML = html;
+        }
+
+        memberSearchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const filteredMembers = allMembersData.filter(member => {
+                return (member['ชื่อ'] && member['ชื่อ'].toLowerCase().includes(searchTerm)) ||
+                    (member['นามสกุล'] && member['นามสกุล'].toLowerCase().includes(searchTerm)) ||
+                    (member['เบอร์โทร'] && member['เบอร์โทร'].includes(searchTerm)) ||
+                    (member['เลขบัตร/ประกัน'] && member['เลขบัตร/ประกัน'].includes(searchTerm)) ||
+                    (member['หมายเหตุ'] && member['หมายเหตุ'].toLowerCase().includes(searchTerm)) ||
+                    (member['รหัส'] && member['รหัส'].toLowerCase().includes(searchTerm));
+            });
+            renderMemberTable(filteredMembers);
+        });
+
+
+        function editMember(id) {
+            // Assuming allMembersData is up-to-date from loadMembers()
+            const memberToEdit = allMembersData.find(m => m['รหัส'] === id);
+            if (!memberToEdit) {
+                Swal.fire('ไม่พบข้อมูล', `ไม่พบสมาชิก รหัส: ${id}`, 'warning');
+                return;
+            }
+
+            const form = document.getElementById('memberForm');
+            // Map ข้อมูลให้ตรงกับ input แต่ละช่อง
+            form['รหัส'].value = memberToEdit['รหัส'] || '';
+            form['ไลน์ไอดี'].value = memberToEdit['ไลน์ไอดี'] || '';
+            form['ชื่อ'].value = memberToEdit['ชื่อ'] || '';
+            form['นามสกุล'].value = memberToEdit['นามสกุล'] || '';
+            form['เบอร์โทร'].value = memberToEdit['เบอร์โทร'] || '';
+            form['เลขบัตร/ประกัน'].value = memberToEdit['เลขบัตร/ประกัน'] || '';
+            form['โรค/แพ้'].value = memberToEdit['โรค/แพ้'] || '';
+            form['หมายเหตุ'].value = memberToEdit['หมายเหตุ'] || '';
+            showForm(true); // Pass true to indicate it's an edit
+        }
+
+        function deleteMember(id) {
+            Swal.fire({
+                title: 'ต้องการลบสมาชิก?',
+                text: `คุณแน่ใจหรือไม่ว่าต้องการลบสมาชิกไอดี: ${id}? การกระทำนี้ไม่สามารถย้อนกลับได้!`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'ใช่, ลบเลย!',
+                cancelButtonText: 'ยกเลิก',
+                customClass: {
+                    popup: 'font-thai', // Apply Thai font to SweetAlert
+                    title: 'font-thai',
+                    htmlContainer: 'font-thai',
+                    confirmButton: 'font-thai',
+                    cancelButton: 'font-thai'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'กำลังลบ...',
+                        allowOutsideClick: false,
+                        didOpen: () => Swal.showLoading()
+                    });
+                    fetch(CONFIG_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                    action: 'deleteMember',
+                                    id: id,
+                                    branch: localStorage.getItem('branch') || '1'
+                                }) // Ensure 'id' matches GAS parameter
+                        })
+                        .then(response => response.json())
+                        .then(res => {
+                            if (res.success) {
+                                Swal.fire('ลบสำเร็จ!', 'สมาชิกถูกลบออกจากระบบแล้ว', 'success');
+                                loadMembers(); // Refresh the list
+                            } else {
+                                Swal.fire('ผิดพลาด!', res.message || 'ไม่สามารถลบสมาชิกได้', 'error');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error deleting member:', error);
+                            Swal.fire('ผิดพลาด!', 'เกิดข้อผิดพลาดในการเชื่อมต่อ', 'error');
+                        });
+                }
+            });
+        }
+
+        // Initial load
+        loadMembers();
+    </script>
+</body>
+
+</html>
