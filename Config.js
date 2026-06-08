@@ -1,4 +1,4 @@
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz4J0kgkseIWm1VA2f_Z7i88eRmk0CU4gnQZC5bITaSNDfsxzy4TY6TD6wRCZSz3Kid/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxQMb41_9J81C_3DGdLSdHxSqattwSBcOuX-pqOqzygk7QxBOKSZAHntWGkJVRny6z8SA/exec';
 
 const LIFF_ID = '#'; 
 const LIFF_ID_HISTORY = '#';
