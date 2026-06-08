@@ -1,5 +1,5 @@
-const CONFIG_URL = 'https://script.google.com/macros/s/AKfycbx52mV2D_9JiKPO826l9cJjh6gE9wLKSd4BOSFipeHIsU-dwbgBLu6h06KfS398WbNo/exec';
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz4J0kgkseIWm1VA2f_Z7i88eRmk0CU4gnQZC5bITaSNDfsxzy4TY6TD6wRCZSz3Kid/exec';
+const CONFIG_URL = 'https://script.google.com/macros/s/AKfycbzC7nLuQC2B7LZMEbbj-kY5f65c8wLk3hp0_2quUnnSMwFuwYRL0CeMfkijif7qDjdf/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxQMb41_9J81C_3DGdLSdHxSqattwSBcOuX-pqOqzygk7QxBOKSZAHntWGkJVRny6z8SA/exec';
 
 const DEFAULT_BRANCHES = [
   { id: '1', name: 'CPF มีนบุรี 1' },
