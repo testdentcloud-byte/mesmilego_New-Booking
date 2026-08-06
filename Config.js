@@ -5,7 +5,7 @@ const LIFF_ID_HISTORY = '2008293202-5EPzcBAy';
 const LIFF_ID_CONFIRM = '2008293202-VJQZWvzL'; 
 
 const DEFAULT_BRANCHES = [
-  { id: '1', name: 'CPF มีนบุรี 1' },
+  { id: '1', name: 'อสร. มหาชัย' },
   { id: '2', name: 'CPF มีนบุรี 2' },
   { id: '3', name: 'อสร.หนองจอก' },
   { id: '4', name: 'แปรรูปไข่หนองจอก' },
